@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ROTA - Sistema de Administração</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-brand">
+                <i class="fas fa-shield"></i>
+                <h1>ROTA</h1>
+                <small>Rondas Ostensivas</small>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <a href="#" class="nav-link active" data-page="dashboard">
+                    <i class="fas fa-chart-pie"></i> Dashboard
+                </a>
+                <a href="#" class="nav-link" data-page="equipe">
+                    <i class="fas fa-users"></i> Equipe
+                </a>
+                <a href="#" class="nav-link" data-page="cadastro">
+                    <i class="fas fa-user-plus"></i> Cadastro
+                </a>
+                <a href="#" class="nav-link" data-page="advertencias">
+                    <i class="fas fa-exclamation-triangle"></i> Advertências
+                </a>
+                <a href="#" class="nav-link" data-page="cursos">
+                    <i class="fas fa-graduation-cap"></i> Cursos
+                </a>
+                <a href="#" class="nav-link" data-page="reciclagem">
+                    <i class="fas fa-recycle"></i> Reciclagem
+                </a>
+                <a href="#" class="nav-link" data-page="promocoes">
+                    <i class="fas fa-arrow-up"></i> Promoções
+                </a>
+                <a href="#" class="nav-link" data-page="logs">
+                    <i class="fas fa-list"></i> Logs
+                </a>
+            </nav>
+            
+            <div class="sidebar-footer">
+                <span id="connectionStatus">
+                    <i class="fas fa-circle"></i> Conectando...
+                </span>
+            </div>
+        </aside>
+        
+        <!-- Main Content -->
+        <main class="main">
+            <!-- Dashboard -->
+            <section class="page active" id="page-dashboard">
+                <header class="page-header">
+                    <h2><i class="fas fa-chart-pie"></i> Dashboard</h2>
+                    <button class="btn btn-sm" onclick="carregarTodosDados()">
+                        <i class="fas fa-sync-alt"></i> Atualizar
+                    </button>
+                </header>
+                
+                <div class="stats">
+                    <div class="stat-card">
+                        <i class="fas fa-users"></i>
+                        <div>
+                            <h3 id="statTotal">0</h3>
+                            <p>Total de Membros</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-check-circle"></i>
+                        <div>
+                            <h3 id="statAtivos">0</h3>
+                            <p>Ativos</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-gavel"></i>
+                        <div>
+                            <h3 id="statAdvertencias">0</h3>
+                            <p>Total Advertências</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-graduation-cap"></i>
+                        <div>
+                            <h3 id="statCursos">0</h3>
+                            <p>Total Cursos</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="chart-box">
+                    <canvas id="chartPatentes"></canvas>
+                </div>
+            </section>
+            
+            <!-- Equipe -->
+            <section class="page" id="page-equipe">
+                <header class="page-header">
+                    <h2><i class="fas fa-users"></i> Equipe</h2>
+                    <input type="text" id="searchEquipe" placeholder="🔍 Buscar por QRA ou Nome..." class="input-search">
+                </header>
+                
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>QRA</th>
+                                <th>Nome</th>
+                                <th>Patente</th>
+                                <th>Status</th>
+                                <th>Especializações</th>
+                                <th>Advertências</th>
+                                <th>Cursos</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabelaEquipe">
+                            <tr>
+                                <td colspan="8" style="text-align:center;padding:40px;color:#888;">
+                                    <i class="fas fa-spinner fa-spin"></i> Carregando...
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+            
+            <!-- Cadastro -->
+            <section class="page" id="page-cadastro">
+                <header class="page-header">
+                    <h2><i class="fas fa-user-plus"></i> Cadastrar Membro</h2>
+                </header>
+                
+                <form id="formCadastro" class="form-box">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label><i class="fas fa-id-card"></i> QRA *</label>
+                            <input type="text" id="cadQRA" placeholder="Número do QRA" required>
+                        </div>
+                        <div class="form-group">
+                            <label><i class="fas fa-user"></i> Nome Completo *</label>
+                            <input type="text" id="cadNome" placeholder="Nome do policial" required>
+                        </div>
+                        <div class="form-group">
+                            <label><i class="fas fa-star"></i> Patente *</label>
+                            <select id="cadPatente" required>
+                                <option value="">Selecione a patente...</option>
+                                <option>Soldado</option>
+                                <option>Cabo</option>
+                                <option>3º Sargento</option>
+                                <option>2º Sargento</option>
+                                <option>1º Sargento</option>
+                                <option>Subtenente</option>
+                                <option>Tenente</option>
+                                <option>Capitão</option>
+                                <option>Major</option>
+                                <option>Tenente Coronel</option>
+                                <option>Coronel</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label><i class="fas fa-calendar"></i> Data de Admissão *</label>
+                            <input type="date" id="cadData" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label><i class="fas fa-certificate"></i> Especializações</label>
+                        <div class="check-grid" id="checkEspecializacoes">
+                            <label><input type="checkbox" value="COR"> COR</label>
+                            <label><input type="checkbox" value="ATE"> ATE</label>
+                            <label><input type="checkbox" value="ROTAM"> ROTAM</label>
+                            <label><input type="checkbox" value="CAV"> CAV</label>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-success btn-block">
+                        <i class="fas fa-save"></i> Cadastrar Membro
+                    </button>
+                </form>
+            </section>
+            
+            <!-- Advertências -->
+            <section class="page" id="page-advertencias">
+                <header class="page-header">
+                    <h2><i class="fas fa-exclamation-triangle"></i> Registrar Advertência</h2>
+                </header>
+                
+                <form id="formAdvertencia" class="form-box">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label><i class="fas fa-id-card"></i> QRA do Policial *</label>
+                            <input type="text" id="advQRA" placeholder="Digite o QRA" required>
+                        </div>
+                        <div class="form-group">
+                            <label><i class="fas fa-tag"></i> Tipo de Advertência *</label>
+                            <select id="advTipo" required>
+                                <option value="">Selecione o tipo...</option>
+                                <option>Verbal</option>
+                                <option>Escrita</option>
+                                <option>Suspensão 1 dia</option>
+                                <option>Suspensão 3 dias</option>
+                                <option>Suspensão 7 dias</option>
+                                <option>Suspensão 15 dias</option>
+                                <option>Suspensão 30 dias</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fas fa-pen"></i> Motivo *</label>
+                        <textarea id="advMotivo" rows="3" placeholder="Descreva o motivo da advertência..." required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-warning btn-block">
+                        <i class="fas fa-gavel"></i> Registrar Advertência
+                    </button>
+                </form>
+                
+                <div class="lista-container" style="margin-top:30px;">
+                    <h3 style="color:#d4af37; margin-bottom:15px;">
+                        <i class="fas fa-list"></i> Histórico de Advertências
+                    </h3>
+                    <div id="listaAdvertencias">
+                        <p style="text-align:center;color:#888;padding:30px;">Nenhuma advertência registrada</p>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Cursos -->
+            <section class="page" id="page-cursos">
+                <header class="page-header">
+                    <h2><i class="fas fa-graduation-cap"></i> Adicionar Cursos em Lote</h2>
+                </header>
+                
+                <form id="formCurso" class="form-box">
+                    <div class="form-group">
+                        <label><i class="fas fa-users"></i> Selecionar Policiais *</label>
+                        <div style="display:flex; gap:10px; margin-bottom:10px;">
+                            <input type="text" id="searchPolicialCurso" placeholder="🔍 Buscar por QRA ou Nome..." style="flex:1;">
+                            <button type="button" class="btn" onclick="buscarPoliciaisCurso()">
+                                <i class="fas fa-search"></i> Buscar
+                            </button>
+                        </div>
+                        <div id="listaPoliciaisBusca" style="max-height:200px; overflow-y:auto; background:#111; border-radius:8px; padding:10px; display:none;"></div>
+                        <div id="policiaisSelecionados" style="margin-top:10px;">
+                            <p style="color:#888; font-size:13px;">Nenhum policial selecionado</p>
+                        </div>
+                    </div>
+                    
+                    <hr style="border-color:#333; margin:20px 0;">
+                    
+                    <p style="color:#888; font-size:13px; margin-bottom:15px;">
+                        <i class="fas fa-info-circle"></i> Os cursos são opcionais. Preencha apenas os que desejar.
+                    </p>
+                    
+                    <div id="listaCursosAdicionar">
+                        <div class="curso-item-adicionar" style="background:#111; padding:15px; border-radius:8px; margin-bottom:15px; border:1px solid #333;">
+                            <h4 style="color:#d4af37; margin-bottom:10px;">📚 Curso #1 <span style="color:#888; font-size:12px; font-weight:normal;">(opcional)</span></h4>
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label>Nome do Curso</label>
+                                    <input type="text" class="cursoNome" placeholder="Nome do curso">
+                                </div>
+                                <div class="form-group">
+                                    <label>Instituição</label>
+                                    <input type="text" class="cursoInstituicao" placeholder="Instituição">
+                                </div>
+                                <div class="form-group">
+                                    <label>Data de Conclusão</label>
+                                    <input type="date" class="cursoData">
+                                </div>
+                                <div class="form-group">
+                                    <label>Carga Horária</label>
+                                    <input type="number" class="cursoCarga" placeholder="Horas" min="0" value="0">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div style="display:flex; gap:10px; margin-top:15px;">
+                        <button type="button" class="btn btn-sm" onclick="adicionarMaisCurso()" style="flex:1;">
+                            <i class="fas fa-plus"></i> Adicionar Mais Cursos
+                        </button>
+                        <button type="submit" class="btn btn-success btn-block" style="flex:1;">
+                            <i class="fas fa-save"></i> Salvar Cursos para Todos
+                        </button>
+                    </div>
+                </form>
+                
+                <div class="lista-container" style="margin-top:30px;">
+                    <h3 style="color:#d4af37; margin-bottom:15px;">
+                        <i class="fas fa-list"></i> Histórico de Cursos
+                    </h3>
+                    <div id="listaCursos">
+                        <p style="text-align:center;color:#888;padding:30px;">Nenhum curso registrado</p>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Reciclagem -->
+            <section class="page" id="page-reciclagem">
+                <header class="page-header">
+                    <h2><i class="fas fa-recycle"></i> Reciclagem de Cursos</h2>
+                </header>
+                
+                <div class="stats" style="margin-bottom:25px;">
+                    <div class="stat-card">
+                        <i class="fas fa-recycle"></i>
+                        <div>
+                            <h3 id="statTotalReciclagem">0</h3>
+                            <p>Total em Reciclagem</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-clock"></i>
+                        <div>
+                            <h3 id="statPendenteReciclagem">0</h3>
+                            <p>Pendentes</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-check-circle"></i>
+                        <div>
+                            <h3 id="statConcluidoReciclagem">0</h3>
+                            <p>Concluídos</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:25px;">
+                    <div>
+                        <div class="form-box">
+                            <h3 style="color:#d4af37; margin-bottom:20px;">
+                                <i class="fas fa-exclamation-triangle"></i> Enviar para Reciclagem
+                            </h3>
+                            
+                            <div class="form-group">
+                                <label>QRA do Policial *</label>
+                                <div style="display:flex; gap:10px;">
+                                    <input type="text" id="reciclagemQRA" placeholder="Digite o QRA" style="flex:1;">
+                                    <button type="button" class="btn" onclick="buscarPolicialReciclagem()">
+                                        <i class="fas fa-search"></i> Buscar
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <div id="infoPolicialReciclagem" style="display:none; padding:12px; background:#111; border-radius:8px; margin-bottom:15px; border-left:3px solid #ffa500;">
+                                <span style="color:#ffa500; font-weight:bold;" id="nomePolicialReciclagem"></span>
+                                <span class="badge badge-info" style="margin-left:10px;" id="patentePolicialReciclagem"></span>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>Curso para Reciclagem *</label>
+                                <select id="cursoReciclagem">
+                                    <option value="">Primeiro busque um policial</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>Motivo *</label>
+                                <select id="motivoReciclagem">
+                                    <option value="">Selecione o motivo...</option>
+                                    <option>Erro em procedimento</option>
+                                    <option>Desempenho insatisfatório</option>
+                                    <option>Falta de atenção</option>
+                                    <option>Não aplicou o treinamento</option>
+                                    <option>Reciclagem preventiva</option>
+                                    <option>Determinação do comando</option>
+                                    <option>Outro</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group" id="outroMotivoGroup" style="display:none;">
+                                <label>Descreva o motivo</label>
+                                <textarea id="outroMotivo" rows="2" placeholder="Descreva o motivo..."></textarea>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>Observações</label>
+                                <textarea id="obsReciclagem" rows="2" placeholder="Observações adicionais (opcional)..."></textarea>
+                            </div>
+                            
+                            <button type="button" class="btn btn-warning btn-block" onclick="enviarParaReciclagem()">
+                                <i class="fas fa-recycle"></i> Enviar para Reciclagem
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <div class="table-wrap" style="max-height:500px; overflow-y:auto;">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>QRA</th>
+                                        <th>Curso</th>
+                                        <th>Status</th>
+                                        <th>Ações</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tabelaReciclagem">
+                                    <tr>
+                                        <td colspan="4" style="text-align:center;padding:40px;color:#888;">
+                                            <i class="fas fa-recycle" style="font-size:48px;display:block;margin-bottom:15px;"></i>
+                                            Nenhuma reciclagem registrada
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Promoções -->
+            <section class="page" id="page-promocoes">
+                <header class="page-header">
+                    <h2><i class="fas fa-arrow-up"></i> Promover Policial</h2>
+                </header>
+                
+                <div class="form-box">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>QRA do Policial *</label>
+                            <input type="text" id="promoQRA" placeholder="Digite o QRA">
+                            <button type="button" class="btn btn-sm" onclick="buscarPromover()" style="margin-top:10px;width:100%;">
+                                <i class="fas fa-search"></i> Buscar
+                            </button>
+                        </div>
+                        <div class="form-group">
+                            <label>Nome</label>
+                            <input type="text" id="promoNome" readonly placeholder="Nome do policial">
+                        </div>
+                        <div class="form-group">
+                            <label>Patente Atual</label>
+                            <input type="text" id="promoPatenteAtual" readonly placeholder="Patente atual">
+                        </div>
+                        <div class="form-group">
+                            <label>Nova Patente</label>
+                            <select id="promoNovaPatente">
+                                <option value="">Busque um policial primeiro</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button class="btn btn-warning btn-block" onclick="executarPromocao()">
+                        <i class="fas fa-arrow-up"></i> Promover
+                    </button>
+                </div>
+            </section>
+            
+            <!-- Logs -->
+            <section class="page" id="page-logs">
+                <header class="page-header">
+                    <h2><i class="fas fa-list"></i> Registro de Atividades</h2>
+                    <button class="btn btn-sm" onclick="carregarLogs()">
+                        <i class="fas fa-sync-alt"></i> Atualizar
+                    </button>
+                </header>
+                
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th style="width:180px;">Data/Hora</th>
+                                <th style="width:150px;">Ação</th>
+                                <th>Detalhes</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabelaLogs">
+                            <tr>
+                                <td colspan="3" style="text-align:center;padding:40px;color:#888;">
+                                    <i class="fas fa-spinner fa-spin"></i> Carregando...
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+    </div>
+    
+    <!-- Modal -->
+    <div class="modal" id="modal">
+        <div class="modal-dialog">
+            <div class="modal-header">
+                <h3 id="modalTitle"></h3>
+                <button class="modal-close" onclick="fecharModal()">&times;</button>
+            </div>
+            <div class="modal-body" id="modalBody"></div>
+        </div>
+    </div>
+    
+    <!-- Toast Notification -->
+    <div class="toast" id="toast"></div>
+    
+    <!-- Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    
+    <!-- Script Principal -->
+    <script src="script.js"></script>
+</body><!-- NO FINAL DO BODY -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script src="script.js"></script>
+</html>
